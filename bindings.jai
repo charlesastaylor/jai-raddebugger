@@ -10,6 +10,7 @@ RADDBG_MARKUP_DEFAULT_VSNPRINTF :: 1;
 
 RADDBG_MARKUP_STL_TYPE_VIEWS :: 1;
 
+raddbg_is_attached_byte_marker: [1] u8 #elsewhere lib_raddbg_markup;
 raddbg_is_attached__impl :: () -> s32 #foreign lib_raddbg_markup;
 raddbg_thread_id__impl :: () -> s32 #foreign lib_raddbg_markup;
 raddbg_thread_name__impl :: (id: s32, fmt: *u8, __args: ..Any) -> void #foreign lib_raddbg_markup;

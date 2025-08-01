@@ -7,3 +7,9 @@ To get started you can compile the example program `jai example.jai -x64` and ru
 - The `mule_main` example program shipped with the RAD Debugger. This can be built with `build.bat mule_main mule_module mule_hotload`
 
 Tested with RAD Debugger v0.9.20-alpha.
+
+## Latest
+
+This branch is kept up to date with `raddebugger/master`. Latest commit `25963dc9b40a4c357c5240da156a57e6a0ee2cca`. It has a number of fixes over the v0.9.20-alpha version.
+
+I'm not sure how much I want to be in the business of maintaining branches... for now we are doing this though.

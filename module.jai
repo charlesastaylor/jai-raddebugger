@@ -15,8 +15,6 @@
 
 #if ENABLED {
 
-    // NOTE(Charles): This is currently broken if you use any raddbg_type_view, or raddbg_entry_point. I opened an issue which was fixed
-    // same day. Not bad if you ask me. So on next release this will work!
     raddbg_is_attached :: () -> bool #expand #no_debug #no_context {
         return cast(bool, raddbg_is_attached__impl());
     }
@@ -216,8 +214,8 @@
     // I tried to check on the length of string to do different things but had issues.
     // @TODO(Charles): Using the slice($) version you can see it correctly doing two different things based on value of count, but with the top one both
     // strings are treated the same?! Report/look at code
-    // raddbg_type_view(string, count < 25 ? no_addr(array(data,count)) : text(array(data, count)));
-    // raddbg_type_view(string, count < 25 ? slice($) : text(array(data, count)));
+    // raddbg_type_view(string, "count < 25 ? no_addr(array(data,count)) : text(array(data, count))");
+    // raddbg_type_view(string, "count < 25 ? slice($) : text(array(data, count))");
 
 
     // Dynamic arrays and array views. (Static arrays are fine by default)
@@ -228,11 +226,6 @@
     // #run raddbg_type_view("[..] ?", "array(data, count)");                // Just show the items
     #run raddbg_type_view("[..] ?", "rows($, count, array(data, count))");   // Show the count, then the items
     // #run raddbg_type_view("[..] ?", "rows($, count, allocated, allocator, allocator_data, array(data, count))"); // Show the whole shebang, then the items
-
-    // @TODO(Charles): When just doing the items, there was an issue where the count would be the count of the first string in the array.
-    // I think this is a bug in the debugger? It probably also applies to any type that has a "count" member? Report/look at code.
-    // #run raddbg_type_view([..] string, "array(data, count)"); //
-
     
     #import "Simp";
 
