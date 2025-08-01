@@ -6,4 +6,4 @@ To get started you can compile the example program `jai example.jai -x64` and ru
 - The `raddbg_readme.md` that is included in RAD Debugger release, or output to build directory.
 - The `mule_main` example program shipped with the RAD Debugger. This can be built with `build.bat mule_main mule_module mule_hotload`
 
-Tested with RAD Debugger v0.9.20-alpha.
+Tested with RAD Debugger v0.9.20-alpha. The `latest` branch is kept (more!) up to date with `raddebugger/master`, there are a number of fixes there.
