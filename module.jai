@@ -5,6 +5,7 @@
 //
 // @Incomplete: Calling any of the procs that call into the c library at compile time will crash your program. There should be someway to mitigate this (without having to compile a dll that makes no sense to exist)
 // @Incomplete: Is there any reason to have these @PrintLike s? We could just take a string, and then the user can tprint if they want to? For the thread stuff I started doing this, one thing is we have to temp_c_string stuff to be sure. Hmm..
+// @Incomplete: Maybe type views and entry points would be better implemeneted with notes. Would require a metaprogram plugin etc to handle though.
 
 // NOTE(Charles): Atm I generate a static lib and bindings. The library, a single header lib in raddbg_markup.h, is not a lot
 // of code so it would better to have a jai port, we could then even be a single file module. I chose to start with using a library 
@@ -202,6 +203,7 @@
 #if ENABLED && DEFINE_TYPE_VIEWS_FOR_COMMON_JAI_TYPES {
     // NOTE(Charles): These views can hide fields you may need to look at, you can add a watch "raw(my_variable)" in that case.
 
+
     #run raddbg_type_view(bool, "bool($)");
 
     
@@ -226,6 +228,26 @@
     // #run raddbg_type_view("[..] ?", "array(data, count)");                // Just show the items
     #run raddbg_type_view("[..] ?", "rows($, count, array(data, count))");   // Show the count, then the items
     // #run raddbg_type_view("[..] ?", "rows($, count, allocated, allocator, allocator_data, array(data, count))"); // Show the whole shebang, then the items
+
+    // Type_Info
+    // NOTE(Charles): An attempt anyway... $ doesn't seem to work as the thing to cast, so I had to use &type. That is sort of fine, but then
+    // the first member being info: Type_Info, was causing endless recurssion issues, lagged the debugger and actually crashed it also. So I
+    // had use rows() to pick out stuff. This works for some types, but anything that has a *Type_Info child is messed up, the nesting evaluation
+    // is not handled correctly and we mostly just seem to cast ourselves instead of the member.
+TYPE_INFO :: #string TYPE_VIEW
+type == 0  ? rows((Type_Info_Integer *)  (&type), info.type, info.runtime_size, signed) :
+type == 1  ? rows((Type_Info_Float *)    (&type), info.type, info.runtime_size) :
+type == 3  ? rows((Type_Info_String *)   (&type), info.type, info.runtime_size) :
+type == 11 ? rows((Type_Info_Enum *)     (&type), info.type, info.runtime_size, name, internal_type, names, values, status_flags, enum_type_flags) :
+rows($, type, runtime_size)
+TYPE_VIEW
+// type == 4 ? rows((Type_Info_Pointer *)(&type), info.type, info.runtime_size, pointer_to) :
+// type == 5 ? rows((Type_Info_Procedure *)(&type), info.type, info.runtime_size, argument_types, return_types, procedure_flags) :
+// type == 7 ? (Type_Info_Struct *)(&type) : 
+// type == 8 ? (Type_Info_Array *)(&type) : 
+
+    #run raddbg_type_view(Type_Info, TYPE_INFO);
+    
     
     #import "Simp";
 
@@ -238,6 +260,8 @@
     #run raddbg_type_view(Vector2, "rows($, x, y)");
     #run raddbg_type_view(Vector3, "rows($, x, y, z)");
     #run raddbg_type_view(Vector4, "rows($, x, y, z, w)");
+
+    #run raddbg_type_view(Quaternion, "rows($, x, y, z, w)");
 
     #run raddbg_type_view(Matrix2, "columns($.coef, $[0], $[1]");
     #run raddbg_type_view(Matrix3, "columns($.coef, $[0], $[1], $[2]");
